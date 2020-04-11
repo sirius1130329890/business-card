@@ -137,7 +137,7 @@ public class Show extends AppCompatActivity {
                                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://facebook.com/"+fac)));
                             }
                             else if (textView.getText().toString().equals(ins)){
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://instagram.com/"+fac)));
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://instagram.com/"+ins)));
                             }
                         }
                     });
