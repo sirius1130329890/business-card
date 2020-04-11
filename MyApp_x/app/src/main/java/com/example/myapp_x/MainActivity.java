@@ -119,12 +119,13 @@ public class MainActivity extends AppCompatActivity {
                 buttonParams.setMargins(80, 100, 20, 100);
                 allLayouts[i].setBackgroundResource(R.drawable.hape);
                 allLayouts[i].addView(imageViewButton, buttonParams);
+                final int finalI = i;
                 imageViewButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int s = id_id - 1;
                         Intent intent = new Intent(MainActivity.this, Edit.class);
-                        intent.putExtra("id", s);
+                        intent.putExtra("position", finalI);
+                        intent.putExtra("id", id_id);
                         startActivity(intent);
                         Log.d(LOG_TAG, "id button " + id_id);
 
@@ -133,9 +134,8 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int s = id_id - 1;
                         Intent intent = new Intent(MainActivity.this, Show.class);
-                        intent.putExtra("id", s);
+                        intent.putExtra("id", finalI);
                         startActivity(intent);
 
                     }

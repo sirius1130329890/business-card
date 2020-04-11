@@ -3,6 +3,7 @@ package com.example.myapp_x;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -41,7 +42,7 @@ public class Edit extends AppCompatActivity {
     Bitmap bmp;
     private ImageView ivImage;
     final String LOG_TAG = "Edit activity";
-    int id;
+    int id,position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +134,7 @@ public class Edit extends AppCompatActivity {
 
     public void onSelect() {
         Intent intent = getIntent();
+        position = intent.getIntExtra("position", 0);
         id = intent.getIntExtra("id", 0);
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         try {
@@ -140,8 +142,8 @@ public class Edit extends AppCompatActivity {
                     null, null,
                     null,
                     null, null, null);
-            cursor.moveToPosition(id);
-            Log.d(LOG_TAG, "Id = " + id);
+            cursor.moveToPosition(position);
+            Log.d(LOG_TAG, "Id = " + position);
             int picture = cursor.getColumnIndex("picture");
             int firstName = cursor.getColumnIndex("firstName");
             int lastName = cursor.getColumnIndex("lastName");
@@ -183,8 +185,7 @@ public class Edit extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void onClickButton(View v) {
         final SQLiteDatabase database = dbHelper.getWritableDatabase();
-        int m = id + 1;
-        final String idIndex = Integer.toString(m);
+        final String idIndex = Integer.toString(id);
 
         String firstName = editTextFirstName.getText().toString();
         String lastName = editTextLastName.getText().toString();
@@ -216,6 +217,35 @@ public class Edit extends AppCompatActivity {
         dbHelper.close();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+
+    }
+
+    public void onClickDelete(View v){
+        final SQLiteDatabase database = dbHelper.getWritableDatabase();
+        final String idIndex = Integer.toString(id);
+        Context context;
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //Yes button clicked
+                        database.delete(DBHelper.TABLE_CONTACTS,  DBHelper.KEY_ID + "="+idIndex,null);
+                        dbHelper.close();
+                        startActivity(new Intent(Edit.this,MainActivity.class));
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Ви дійсно бажаєте видалити візитку?").setPositiveButton("Так", dialogClickListener)
+                .setNegativeButton("Ні", dialogClickListener).show();
 
     }
 }

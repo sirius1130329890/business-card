@@ -119,23 +119,22 @@ public class SelectAll extends AppCompatActivity {
                 layoutMyViews.setBackgroundResource(R.drawable.hape);
                 layoutAllViews.addView(layoutMyViews,layoutAllViewsParams);
 
+                final int finalI = i;
                 imageViewButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int s =id_id - 1;
-                        Intent intent = new Intent(SelectAll.this,Edit.class);
-                        intent.putExtra("id",s);
+                        Intent intent = new Intent(SelectAll.this, Edit.class);
+                        intent.putExtra("position", finalI);
+                        intent.putExtra("id", id_id);
                         startActivity(intent);
-                        Log.d(LOG_TAG, "id button "+id_id);
-
+                        Log.d(LOG_TAG, "id button " + id_id);
                     }
                 });
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int s = id_id - 1;
                         Intent intent = new Intent(SelectAll.this, Show.class);
-                        intent.putExtra("id", s);
+                        intent.putExtra("id", finalI);
                         startActivity(intent);
 
                     }
