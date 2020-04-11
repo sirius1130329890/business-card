@@ -220,31 +220,4 @@ public class Edit extends AppCompatActivity {
 
     }
 
-    public void onClickDelete(View v){
-        final SQLiteDatabase database = dbHelper.getWritableDatabase();
-        final String idIndex = Integer.toString(id);
-
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-                        //Yes button clicked
-                        database.delete(DBHelper.TABLE_CONTACTS,  DBHelper.KEY_ID + "="+idIndex,null);
-                        dbHelper.close();
-                        startActivity(new Intent(Edit.this,MainActivity.class));
-                        break;
-
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        //No button clicked
-                        break;
-                }
-            }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Ви дійсно бажаєте видалити візитку?").setPositiveButton("Так", dialogClickListener)
-                .setNegativeButton("Ні", dialogClickListener).show();
-
-    }
 }

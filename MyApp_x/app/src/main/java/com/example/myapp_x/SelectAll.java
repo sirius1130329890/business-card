@@ -1,6 +1,8 @@
 package com.example.myapp_x;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -49,7 +51,8 @@ public class SelectAll extends AppCompatActivity {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
         LinearLayout.LayoutParams firstParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        LinearLayout.LayoutParams layoutImageParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        final SQLiteDatabase database = dbHelper.getWritableDatabase();
 
 
         try {
@@ -109,13 +112,21 @@ public class SelectAll extends AppCompatActivity {
                 textView1.setTextColor(Color.WHITE);
                 linearLayout.addView(textView1,textParams);
                 layoutMyViews.addView(linearLayout,layoutParams);
+                LinearLayout layoutImage = new LinearLayout(this);
+                layoutImage.setOrientation(LinearLayout.HORIZONTAL);
+                layoutImageParams.weight=1;
+                layoutImageParams.setMargins(20,100,20,100);
                 final ImageView imageViewButton = new ImageView(this);
                 imageViewButton.setImageResource(R.drawable.edit);
+                buttonParams.setMargins(10, 0, 0, 0);
                 buttonParams.gravity = Gravity.CENTER;
                 buttonParams.weight = 1;
-                buttonParams.setMargins(100,100,100,100);
+                layoutImage.addView(imageViewButton,buttonParams);
+                final ImageView imageViewDelete = new ImageView(this);
+                imageViewDelete.setImageResource(R.drawable.delete);
+                layoutImage.addView(imageViewDelete,buttonParams);
                 layoutAllViewsParams.setMargins(5,10,5,5);
-                layoutMyViews.addView(imageViewButton,buttonParams);
+                layoutMyViews.addView(layoutImage,layoutImageParams);
                 layoutMyViews.setBackgroundResource(R.drawable.hape);
                 layoutAllViews.addView(layoutMyViews,layoutAllViewsParams);
 
@@ -139,6 +150,35 @@ public class SelectAll extends AppCompatActivity {
 
                     }
                 });
+                imageViewDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final String idIndex = Integer.toString(id_id);
+
+                        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which){
+                                    case DialogInterface.BUTTON_POSITIVE:
+                                        database.delete(DBHelper.TABLE_CONTACTS,  DBHelper.KEY_ID + "="+idIndex,null);
+                                        dbHelper.close();
+                                        Intent intent = getIntent();
+                                        finish();
+                                        startActivity(intent);
+                                        break;
+
+                                    case DialogInterface.BUTTON_NEGATIVE:
+                                        break;
+                                }
+                            }
+                        };
+                        AlertDialog.Builder builder = new AlertDialog.Builder(SelectAll.this);
+                        builder.setMessage("Ви дійсно бажаєте видалити візитку?").setPositiveButton("Так", dialogClickListener)
+                                .setNegativeButton("Ні", dialogClickListener).show();
+
+                    }
+                });
+
 
                 ++i;
 
