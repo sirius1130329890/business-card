@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.r0adkll.slidr.Slidr;
 
@@ -75,11 +77,11 @@ public class Show extends AppCompatActivity {
             String las = cursor.getString(lastName);
             String pre = cursor.getString(namePrefix);
             String suf = cursor.getString(nameSuffix);
-            String num = cursor.getString(number);
-            String ema = cursor.getString(email);
-            String web = cursor.getString(website);
-            String fac = cursor.getString(facebook);
-            String ins = cursor.getString(instagram);
+            final String num = cursor.getString(number);
+            final String ema = cursor.getString(email);
+            final String web = cursor.getString(website);
+            final String fac = cursor.getString(facebook);
+            final String ins = cursor.getString(instagram);
             String[] hallo = new String[]{num, ema, web, fac, ins};
             byte[] decodedString = Base64.decode(pic, Base64.DEFAULT);
             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
@@ -99,7 +101,7 @@ public class Show extends AppCompatActivity {
                     imageParams.setMargins(30, 10, 0, 20);
                     //image
                     layout.addView(imageView, imageParams);
-                    TextView textView = new TextView(this);
+                    final TextView textView = new TextView(this);
                     textView.setText(hallo[i]);
                     textView.setTextColor(Color.WHITE);
                     textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
@@ -114,6 +116,35 @@ public class Show extends AppCompatActivity {
                     viewParams.setMargins(0,0,100,40);
                     secondLayout.addView(view,viewParams);
                     linearLayout.addView(secondLayout,layoutParams);
+                    textView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (textView.getText().toString().equals(num)){
+                                Uri u = Uri.parse("tel:" + textView.getText().toString());
+                                Intent i = new Intent(Intent.ACTION_DIAL, u);
+                                startActivity(i);
+                            }
+                            else if (textView.getText().toString().equals(ema)){
+                                Intent email = new Intent(Intent.ACTION_SEND);
+                                email.putExtra(Intent.EXTRA_EMAIL, new String[]{ ema});
+                                email.setType("message/rfc822");
+                                startActivity(Intent.createChooser(email, "Виберіть проштовий сервіс :"));
+                            }
+                            else if (textView.getText().toString().equals(web)){
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://"+web)));
+                            }
+                            else if (textView.getText().toString().equals(fac)){
+                                Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
+                                facebookIntent.setData(Uri.parse("http://facebook.com/"+fac));
+                                startActivity(facebookIntent);
+                            }
+                            else if (textView.getText().toString().equals(ins)){
+                                Intent instagramIntent = new Intent(Intent.ACTION_VIEW);
+                                instagramIntent.setData(Uri.parse("http://instagram.com/"+fac));
+                                startActivity(instagramIntent);
+                            }
+                        }
+                    });
 
                 }
             }
