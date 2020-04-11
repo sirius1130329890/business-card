@@ -223,7 +223,6 @@ public class Edit extends AppCompatActivity {
     public void onClickDelete(View v){
         final SQLiteDatabase database = dbHelper.getWritableDatabase();
         final String idIndex = Integer.toString(id);
-        Context context;
 
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
