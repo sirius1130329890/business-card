@@ -134,14 +134,10 @@ public class Show extends AppCompatActivity {
                                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://"+web)));
                             }
                             else if (textView.getText().toString().equals(fac)){
-                                Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
-                                facebookIntent.setData(Uri.parse("http://facebook.com/"+fac));
-                                startActivity(facebookIntent);
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://facebook.com/"+fac)));
                             }
                             else if (textView.getText().toString().equals(ins)){
-                                Intent instagramIntent = new Intent(Intent.ACTION_VIEW);
-                                instagramIntent.setData(Uri.parse("http://instagram.com/"+fac));
-                                startActivity(instagramIntent);
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://instagram.com/"+fac)));
                             }
                         }
                     });
